@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/colorPrimary"
+    tools:context="com.github.abdularis.sample.MainActivity">
+
+    <com.github.abdularis.buttonprogress.DownloadButtonProgress
+        android:id="@+id/button_progress"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        app:maxProgress="100"
+        app:progressWidth="4dp"
+        app:finishBackgroundColor="@android:color/transparent"
+        app:determinateBackgroundDrawable="@drawable/bg_button_progress_1"
+        app:idleBackgroundDrawable="@drawable/bg_button_progress_1"/>
+
+    <com.github.abdularis.buttonprogress.DownloadButtonProgress
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        app:state="2"
+        app:maxProgress="100"
+        app:progressWidth="4dp"/>
+
+</LinearLayout>

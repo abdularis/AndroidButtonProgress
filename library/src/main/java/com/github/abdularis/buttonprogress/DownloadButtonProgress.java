@@ -10,6 +10,8 @@ import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -24,6 +26,25 @@ import java.util.List;
  */
 
 public class DownloadButtonProgress extends View implements View.OnClickListener {
+
+    private static final String INSTANCE_STATE = "saved_instance";
+    private static final String INSTANCE_MAX_PROGRESS = "max_progress";
+    private static final String INSTANCE_CURRENT_PROGRESS = "current_progress";
+    private static final String INSTANCE_CURRENT_STATE = "current_state";
+    private static final String INSTANCE_CANCELABLE = "cancelable";
+    private static final String INSTANCE_IDLE_WIDTH = "idle_width";
+    private static final String INSTANCE_IDLE_HEIGHT = "idle_height";
+    private static final String INSTANCE_CANCEL_WIDTH = "cancel_width";
+    private static final String INSTANCE_CANCEL_HEIGHT = "cancel_height";
+    private static final String INSTANCE_FINISH_WIDTH = "finish_width";
+    private static final String INSTANCE_FINISH_HEIGHT = "finish_height";
+    private static final String INSTANCE_IDLE_BG_COLOR = "idle_bg_color";
+    private static final String INSTANCE_FINISH_BG_COLOR = "finish_bg_color";
+    private static final String INSTANCE_INDETERMINATE_BG_COLOR = "indeterminate_bg_color";
+    private static final String INSTANCE_DETERMINATE_BG_COLOR = "determinate_bg_color";
+    private static final String INSTANCE_PROGRESS_DETERMINATE_COLOR = "prog_det_color";
+    private static final String INSTANCE_PROGRESS_INDETERMINATE_COLOR = "prog_indet_color";
+    private static final String INSTANCE_PROGRESS_MARGIN = "prog_margin";
 
     public static final int STATE_IDLE = 1;
     public static final int STATE_INDETERMINATE = 2;
@@ -452,12 +473,6 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
         }
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setProgressRectBounds();
-    }
-
     private void drawIdleState(Canvas canvas) {
         if (mIdleBgDrawable != null) {
             mIdleBgDrawable.setBounds(0, 0, getWidth(), getHeight());
@@ -498,6 +513,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
             drawDrawableInCenter(mCancelIcon, canvas, mCancelIconWidth, mCancelIconHeight);
         }
 
+        setProgressRectBounds();
         mProgressPaint.setColor(mProgressIndeterminateColor);
         canvas.drawArc(mProgressRect, mCurrIndeterminateBarPos, 90, false, mProgressPaint);
     }
@@ -516,6 +532,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
             drawDrawableInCenter(mCancelIcon, canvas, mCancelIconWidth, mCancelIconHeight);
         }
 
+        setProgressRectBounds();
         mProgressPaint.setColor(mProgressDeterminateColor);
         canvas.drawArc(mProgressRect, BASE_START_ANGLE, getDegrees(), false, mProgressPaint);
     }
@@ -534,6 +551,61 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
         else if (mCurrState == STATE_FINISHED) {
             drawFinishState(canvas);
         }
+    }
+
+    @Nullable
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable(INSTANCE_STATE, super.onSaveInstanceState());
+        bundle.putInt(INSTANCE_MAX_PROGRESS, getMaxProgress());
+        bundle.putInt(INSTANCE_CURRENT_PROGRESS, getProgress());
+        bundle.putInt(INSTANCE_CURRENT_STATE, getCurrState());
+        bundle.putBoolean(INSTANCE_CANCELABLE, isCancelable());
+        bundle.putInt(INSTANCE_IDLE_WIDTH, getIdleIconWidth());
+        bundle.putInt(INSTANCE_IDLE_HEIGHT, getIdleIconHeight());
+        bundle.putInt(INSTANCE_CANCEL_WIDTH, getCancelIconWidth());
+        bundle.putInt(INSTANCE_CANCEL_HEIGHT, getCancelIconHeight());
+        bundle.putInt(INSTANCE_FINISH_WIDTH, getFinishIconWidth());
+        bundle.putInt(INSTANCE_FINISH_HEIGHT, getFinishIconHeight());
+        bundle.putInt(INSTANCE_IDLE_BG_COLOR, getIdleBgColor());
+        bundle.putInt(INSTANCE_FINISH_BG_COLOR, getFinishBgColor());
+        bundle.putInt(INSTANCE_INDETERMINATE_BG_COLOR, getIndeterminateBgColor());
+        bundle.putInt(INSTANCE_DETERMINATE_BG_COLOR, getDeterminateBgColor());
+        bundle.putInt(INSTANCE_PROGRESS_DETERMINATE_COLOR, getProgressDeterminateColor());
+        bundle.putInt(INSTANCE_PROGRESS_INDETERMINATE_COLOR, getProgressIndeterminateColor());
+        bundle.putInt(INSTANCE_PROGRESS_MARGIN, getProgressMargin());
+        return bundle;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            mMaxProgress = bundle.getInt(INSTANCE_MAX_PROGRESS);
+            mCurrProgress = bundle.getInt(INSTANCE_CURRENT_PROGRESS);
+            mCurrState = bundle.getInt(INSTANCE_CURRENT_STATE);
+            mCancelable = bundle.getBoolean(INSTANCE_CANCELABLE);
+            mIdleIconWidth = bundle.getInt(INSTANCE_IDLE_WIDTH);
+            mIdleIconHeight = bundle.getInt(INSTANCE_IDLE_HEIGHT);
+            mCancelIconWidth = bundle.getInt(INSTANCE_CANCEL_WIDTH);
+            mCancelIconHeight = bundle.getInt(INSTANCE_CANCEL_HEIGHT);
+            mFinishIconWidth = bundle.getInt(INSTANCE_FINISH_WIDTH);
+            mFinishIconHeight = bundle.getInt(INSTANCE_FINISH_HEIGHT);
+            mIdleBgColor = bundle.getInt(INSTANCE_IDLE_BG_COLOR);
+            mFinishBgColor = bundle.getInt(INSTANCE_FINISH_BG_COLOR);
+            mIndeterminateBgColor = bundle.getInt(INSTANCE_INDETERMINATE_BG_COLOR);
+            mDeterminateBgColor = bundle.getInt(INSTANCE_DETERMINATE_BG_COLOR);
+            mProgressDeterminateColor = bundle.getInt(INSTANCE_PROGRESS_DETERMINATE_COLOR);
+            mProgressIndeterminateColor = bundle.getInt(INSTANCE_PROGRESS_INDETERMINATE_COLOR);
+            mProgressMargin = bundle.getInt(INSTANCE_PROGRESS_MARGIN);
+            super.onRestoreInstanceState(bundle.getParcelable(INSTANCE_STATE));
+
+            if (mCurrState == STATE_INDETERMINATE) mIndeterminateAnimator.start();
+
+            return;
+        }
+        super.onRestoreInstanceState(state);
     }
 
     private void setProgressRectBounds() {

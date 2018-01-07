@@ -1,79 +1,44 @@
 package com.github.abdularis.sample;
 
-import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.github.abdularis.buttonprogress.DownloadButtonProgress;
 
 public class MainActivity extends AppCompatActivity {
-
-    DownloadButtonProgress btn;
-    boolean cancelled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btn = findViewById(R.id.button_progress);
+        setListenerFor(R.id.button_progress_1, R.id.subtitle_1);
+        setListenerFor(R.id.button_progress_2, R.id.subtitle_2);
+    }
+
+    private void setListenerFor(int btnId, int subtitleId) {
+        final DownloadButtonProgress btn = findViewById(btnId);
+        final TextView subtitle = findViewById(subtitleId);
 
         btn.addOnClickListener(new DownloadButtonProgress.OnClickListener() {
             @Override
             public void onIdleButtonClick(View view) {
-                cancelled = false;
-                btn.setIndeterminate();
-                new FakeDownloadTask().execute();
+                new Thread(new SampleTask(new Handler(), btn, subtitle)).start();
             }
 
             @Override
             public void onCancelButtonClick(View view) {
-                cancelled = true;
-                btn.setIdle();
+                // called when cancel button/icon is clicked
             }
 
             @Override
             public void onFinishButtonClick(View view) {
-
+                // called when finish button/icon is clicked
             }
         });
     }
 
-    class FakeDownloadTask extends AsyncTask<Void, Integer, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            int progress = 0;
-            while (progress <= 100) {
-                if (cancelled) break;
-
-                try {
-                    Thread.sleep(50);
-                    publishProgress(progress);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                progress++;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            btn.setDeterminate();
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (cancelled) return;
-            btn.setFinish();
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            btn.setProgress(values[0]);
-        }
-    }
 }

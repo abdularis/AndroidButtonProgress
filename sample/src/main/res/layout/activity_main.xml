@@ -5,25 +5,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:background="@color/colorPrimary"
+    android:padding="16dp"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
     tools:context="com.github.abdularis.sample.MainActivity">
 
     <com.github.abdularis.buttonprogress.DownloadButtonProgress
-        android:id="@+id/button_progress"
+        android:id="@+id/button_progress_1"
         android:layout_width="45dp"
-        android:layout_height="45dp"
-        app:maxProgress="100"
-        app:progressWidth="4dp"
-        app:finishBackgroundColor="@android:color/transparent"
-        app:determinateBackgroundDrawable="@drawable/bg_button_progress_1"
-        app:idleBackgroundDrawable="@drawable/bg_button_progress_1"/>
+        android:layout_height="45dp"/>
+
+    <TextView
+        android:id="@+id/subtitle_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Idle"/>
 
     <com.github.abdularis.buttonprogress.DownloadButtonProgress
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        app:state="2"
-        app:maxProgress="100"
-        app:progressWidth="4dp"/>
+        android:id="@+id/button_progress_2"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="20dp"
+        app:idleIconDrawable="@drawable/ic_download"
+        app:idleBackgroundDrawable="@drawable/bg_button_progress"
+        app:cancelIconDrawable="@drawable/ic_cancel"
+        app:indeterminateBackgroundDrawable="@drawable/bg_button_progress"
+        app:progressIndeterminateColor="#828282"
+        app:determinateBackgroundDrawable="@drawable/bg_button_progress"
+        app:progressDeterminateColor="#ef2241"
+        app:finishIconDrawable="@drawable/ic_finish"
+        app:finishBackgroundDrawable="@drawable/bg_button_progress"/>
+
+    <TextView
+        android:id="@+id/subtitle_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="Idle"/>
 
 </LinearLayout>

@@ -130,7 +130,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
 
             initBackgroundDrawableFromAttribs(res, a);
 
-            mCurrState = a.getInteger(R.styleable.DownloadButtonProgress_state, STATE_IDLE);
+            mCurrState = a.getInt(R.styleable.DownloadButtonProgress_state, STATE_IDLE);
             mCancelable = a.getBoolean(R.styleable.DownloadButtonProgress_cancelable, DEF_CANCELABLE);
             mProgressDeterminateColor = a.getColor(R.styleable.DownloadButtonProgress_progressDeterminateColor, DEF_DETERMINATE_COLOR);
             mProgressIndeterminateColor = a.getColor(R.styleable.DownloadButtonProgress_progressIndeterminateColor, DEF_INDETERMINATE_COLOR);

@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="DownloadButtonProgress">
-        <attr name="state" format="integer"/>
+        <attr name="state" format="enum">
+            <enum name="IDLE" value="1"/>
+            <enum name="INDETERMINATE" value="2"/>
+            <enum name="DETERMINATE" value="3"/>
+            <enum name="FINISHED" value="4"/>
+        </attr>
         <attr name="cancelable" format="boolean"/>
 
         <attr name="idleBackgroundColor" format="color"/>

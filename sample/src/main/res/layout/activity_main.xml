@@ -43,4 +43,11 @@
         android:textSize="18sp"
         android:text="Idle"/>
 
+    <com.github.abdularis.buttonprogress.DownloadButtonProgress
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginTop="20dp"
+        app:progressIndeterminateSweepAngle="1"
+        app:state="INDETERMINATE"/>
+
 </LinearLayout>

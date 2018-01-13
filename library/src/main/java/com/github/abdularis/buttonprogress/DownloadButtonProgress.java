@@ -58,6 +58,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
     private static final int DEF_INDETERMINATE_COLOR = Color.WHITE;
     private static final int DEF_PROGRESS_WIDTH = 8;
     private static final int DEF_PROGRESS_MARGIN = 5;
+    private static final int DEF_PROGRESS_INTEDETERMINATE_WIDTH = 90;
 
     private Drawable mIdleIcon;
     private Drawable mCancelIcon;
@@ -91,6 +92,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
 
     private ValueAnimator mIndeterminateAnimator;
     private int mCurrIndeterminateBarPos;
+    private int mProgressIndeterminateSweepAngle;
 
     private int mProgressDeterminateColor;
     private int mProgressIndeterminateColor;
@@ -132,6 +134,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
 
             mCurrState = a.getInt(R.styleable.DownloadButtonProgress_state, STATE_IDLE);
             mCancelable = a.getBoolean(R.styleable.DownloadButtonProgress_cancelable, DEF_CANCELABLE);
+            mProgressIndeterminateSweepAngle = a.getInteger(R.styleable.DownloadButtonProgress_progressIndeterminateSweepAngle, DEF_PROGRESS_INTEDETERMINATE_WIDTH);
             mProgressDeterminateColor = a.getColor(R.styleable.DownloadButtonProgress_progressDeterminateColor, DEF_DETERMINATE_COLOR);
             mProgressIndeterminateColor = a.getColor(R.styleable.DownloadButtonProgress_progressIndeterminateColor, DEF_INDETERMINATE_COLOR);
             mProgressPaint.setStrokeWidth(
@@ -160,6 +163,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
         } else {
             mCurrState = STATE_IDLE;
             mCancelable = DEF_CANCELABLE;
+            mProgressIndeterminateSweepAngle = DEF_PROGRESS_INTEDETERMINATE_WIDTH;
             mProgressDeterminateColor = DEF_DETERMINATE_COLOR;
             mProgressIndeterminateColor = DEF_INDETERMINATE_COLOR;
             mProgressPaint.setStrokeWidth(DEF_PROGRESS_WIDTH);
@@ -300,6 +304,10 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
 
     public int getProgressMargin() {
         return mProgressMargin;
+    }
+
+    public int getProgressIndeterminateSweepAngle() {
+        return mProgressIndeterminateSweepAngle;
     }
 
     public void setProgress(int progress) {
@@ -445,6 +453,11 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
         invalidate();
     }
 
+    public void setProgressIndeterminateSweepAngle(int progressIndeterminateSweepAngle) {
+        mProgressIndeterminateSweepAngle = progressIndeterminateSweepAngle;
+        invalidate();
+    }
+
     public void addOnClickListener(OnClickListener listener) {
         if (!mClickListeners.contains(listener))
             mClickListeners.add(listener);
@@ -515,7 +528,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
 
         setProgressRectBounds();
         mProgressPaint.setColor(mProgressIndeterminateColor);
-        canvas.drawArc(mProgressRect, mCurrIndeterminateBarPos, 90, false, mProgressPaint);
+        canvas.drawArc(mProgressRect, mCurrIndeterminateBarPos, mProgressIndeterminateSweepAngle, false, mProgressPaint);
     }
 
     private void drawDeterminateState(Canvas canvas) {

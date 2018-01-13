@@ -23,7 +23,7 @@ allprojects {
 Gradle
 ~~~
 dependencies {
-        compile 'com.github.abdularis:androidbuttonprogress:v0.1-alpha3'
+        compile 'com.github.abdularis:androidbuttonprogress:v0.1-alpha4'
 }
 ~~~
 
@@ -34,6 +34,16 @@ Please always use same width and height for this button progress view
 	android:layout_height="45dp"/>
 ~~~
 ![sc1](screenshot/sc1.png)
+
+You can also
+~~~xml
+<com.github.abdularis.buttonprogress.DownloadButtonProgress
+	android:layout_width="72dp"
+	android:layout_height="72dp"
+	app:progressIndeterminateSweepAngle="1"
+	app:state="INDETERMINATE"/>
+~~~
+![demo1](screenshot/demo1.gif)
 
 
 Use custom drawable for every state
@@ -89,6 +99,7 @@ attrs for DownloadButtonProgress
 		<enum name="FINISHED" value="4"/>			
 	</attr>
 	<attr name="cancelable" format="boolean"/>
+	<attr name="progressIndeterminateSweepAngle" format="integer"/>
 
 	<attr name="idleBackgroundColor" format="color"/>
 	<attr name="finishBackgroundColor" format="color"/>

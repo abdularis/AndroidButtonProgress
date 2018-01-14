@@ -23,7 +23,7 @@ allprojects {
 Gradle
 ~~~
 dependencies {
-        compile 'com.github.abdularis:androidbuttonprogress:v0.1-alpha4'
+        compile 'com.github.abdularis:androidbuttonprogress:v0.1-alpha5'
 }
 ~~~
 

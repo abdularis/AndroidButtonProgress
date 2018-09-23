@@ -23,6 +23,14 @@ import java.util.List;
 /**
  * Created by abdularis on 02/01/18.
  *
+ * This view class shows 4 different view in different state
+ * 1. Idle state show a button (download button in this case, but not limited)
+ * 2. Indeterminate state show indeterminate circular progress, with optional button in the center
+ * 3. Determinate state show determinate progress, with optional button in the center
+ * 4. Finish state show finish drawable or hide this view
+ *
+ * you can use this view to make a download or upload button, you might also use this for another
+ * purpose.
  */
 
 public class DownloadButtonProgress extends View implements View.OnClickListener {
@@ -59,7 +67,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
     private static final int DEF_INDETERMINATE_COLOR = Color.WHITE;
     private static final int DEF_PROGRESS_WIDTH = 8;
     private static final int DEF_PROGRESS_MARGIN = 5;
-    private static final int DEF_PROGRESS_INTEDETERMINATE_WIDTH = 90;
+    private static final int DEF_PROGRESS_INDETERMINATE_WIDTH = 90;
 
     private Drawable mIdleIcon;
     private Drawable mCancelIcon;
@@ -137,7 +145,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
             mCurrState = a.getInt(R.styleable.DownloadButtonProgress_state, STATE_IDLE);
             mCancelable = a.getBoolean(R.styleable.DownloadButtonProgress_cancelable, DEF_CANCELABLE);
             mHideOnFinish = a.getBoolean(R.styleable.DownloadButtonProgress_hideOnFinish, false);
-            mProgressIndeterminateSweepAngle = a.getInteger(R.styleable.DownloadButtonProgress_progressIndeterminateSweepAngle, DEF_PROGRESS_INTEDETERMINATE_WIDTH);
+            mProgressIndeterminateSweepAngle = a.getInteger(R.styleable.DownloadButtonProgress_progressIndeterminateSweepAngle, DEF_PROGRESS_INDETERMINATE_WIDTH);
             mProgressDeterminateColor = a.getColor(R.styleable.DownloadButtonProgress_progressDeterminateColor, DEF_DETERMINATE_COLOR);
             mProgressIndeterminateColor = a.getColor(R.styleable.DownloadButtonProgress_progressIndeterminateColor, DEF_INDETERMINATE_COLOR);
             mProgressPaint.setStrokeWidth(
@@ -167,7 +175,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
             mCurrState = STATE_IDLE;
             mCancelable = DEF_CANCELABLE;
             mHideOnFinish = false;
-            mProgressIndeterminateSweepAngle = DEF_PROGRESS_INTEDETERMINATE_WIDTH;
+            mProgressIndeterminateSweepAngle = DEF_PROGRESS_INDETERMINATE_WIDTH;
             mProgressDeterminateColor = DEF_DETERMINATE_COLOR;
             mProgressIndeterminateColor = DEF_INDETERMINATE_COLOR;
             mProgressPaint.setStrokeWidth(DEF_PROGRESS_WIDTH);

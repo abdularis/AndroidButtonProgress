@@ -12,7 +12,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -116,7 +115,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
         this(context, null);
     }
 
-    public DownloadButtonProgress(Context context, @Nullable AttributeSet attrs) {
+    public DownloadButtonProgress(Context context, AttributeSet attrs) {
         super(context, attrs);
         super.setOnClickListener(this);
 
@@ -599,7 +598,6 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
         }
     }
 
-    @Nullable
     @Override
     protected Parcelable onSaveInstanceState() {
         final Bundle bundle = new Bundle();

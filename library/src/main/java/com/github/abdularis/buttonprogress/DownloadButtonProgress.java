@@ -151,7 +151,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
                     a.getDimensionPixelSize(R.styleable.DownloadButtonProgress_progressWidth, DEF_PROGRESS_WIDTH)
             );
             mProgressMargin = a.getDimensionPixelSize(R.styleable.DownloadButtonProgress_progressMargin, DEF_PROGRESS_MARGIN);
-            mCurrProgress = a.getInteger(R.styleable.DownloadButtonProgress_progress, 0);
+            mCurrProgress = a.getInteger(R.styleable.DownloadButtonProgress_currentProgress, 0);
             mMaxProgress = a.getInteger(R.styleable.DownloadButtonProgress_maxProgress, 100);
 
             int icIdleDrawableId = a.getResourceId(R.styleable.DownloadButtonProgress_idleIconDrawable, R.drawable.ic_default_download);
@@ -235,7 +235,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
         return mMaxProgress;
     }
 
-    public int getProgress() {
+    public int getCurrentProgress() {
         return mCurrProgress;
     }
 
@@ -327,7 +327,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
         return mProgressIndeterminateSweepAngle;
     }
 
-    public void setProgress(int progress) {
+    public void setCurrentProgress(int progress) {
         if (mCurrState != STATE_DETERMINATE) return;
         mCurrProgress = Math.min(progress, mMaxProgress);
         invalidate();
@@ -604,7 +604,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
         bundle.putParcelable(INSTANCE_STATE, super.onSaveInstanceState());
         bundle.putInt(INSTANCE_MAX_PROGRESS, getMaxProgress());
         bundle.putBoolean(INSTANCE_HIDE_ON_FINISH, isHideOnFinish());
-        bundle.putInt(INSTANCE_CURRENT_PROGRESS, getProgress());
+        bundle.putInt(INSTANCE_CURRENT_PROGRESS, getCurrentProgress());
         bundle.putInt(INSTANCE_CURRENT_STATE, getCurrState());
         bundle.putBoolean(INSTANCE_CANCELABLE, isCancelable());
         bundle.putInt(INSTANCE_IDLE_WIDTH, getIdleIconWidth());

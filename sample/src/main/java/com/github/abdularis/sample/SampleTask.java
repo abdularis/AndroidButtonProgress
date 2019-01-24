@@ -64,7 +64,7 @@ class SampleTask implements Runnable {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                btnProgress.setProgress(progress);
+                btnProgress.setCurrentProgress(progress);
             }
         });
     }

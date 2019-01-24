@@ -21,7 +21,7 @@
         <attr name="indeterminateBackgroundDrawable" format="reference"/>
         <attr name="determinateBackgroundDrawable" format="reference"/>
 
-        <attr name="progress" format="integer"/>
+        <attr name="currentProgress" format="integer"/>
         <attr name="maxProgress" format="integer"/>
         <attr name="progressWidth" format="dimension"/>
         <attr name="progressMargin" format="dimension"/>

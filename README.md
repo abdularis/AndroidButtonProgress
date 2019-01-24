@@ -25,7 +25,7 @@ allprojects {
 Gradle
 ~~~
 dependencies {
-        implementation 'com.github.abdularis:AndroidButtonProgress:1.0.1'
+        implementation 'com.github.abdularis:androidbuttonprogress:1.0.2'
 }
 ~~~
 

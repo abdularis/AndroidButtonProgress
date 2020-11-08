@@ -13,8 +13,7 @@
     <com.github.abdularis.buttonprogress.DownloadButtonProgress
         android:id="@+id/button_progress_1"
         android:layout_width="45dp"
-        android:layout_height="45dp"
-        app:hideOnFinish="true"/>
+        android:layout_height="45dp"/>
 
     <TextView
         android:id="@+id/subtitle_1"

@@ -36,7 +36,6 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
 
     private static final String INSTANCE_STATE = "saved_instance";
     private static final String INSTANCE_MAX_PROGRESS = "max_progress";
-    private static final String INSTANCE_HIDE_ON_FINISH = "hide_on_finish";
     private static final String INSTANCE_CURRENT_PROGRESS = "current_progress";
     private static final String INSTANCE_CURRENT_STATE = "current_state";
     private static final String INSTANCE_CANCELABLE = "cancelable";
@@ -73,7 +72,6 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
     private Drawable mFinishIcon;
 
     private boolean mCancelable;
-    private boolean mHideOnFinish;
 
     private int mIdleIconWidth;
     private int mIdleIconHeight;
@@ -109,7 +107,8 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
     private Paint mProgressPaint;
     private RectF mProgressRect;
 
-    private List<OnClickListener> mClickListeners;
+    private List<OnClickListener> mClickListeners = new ArrayList<>();
+    private List<OnStateChangedListener> mOnStateChangedListeners = new ArrayList<>();
 
     public DownloadButtonProgress(Context context) {
         this(context, null);
@@ -120,8 +119,6 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
         super.setOnClickListener(this);
 
         initIndeterminateAnimator();
-
-        mClickListeners = new ArrayList<>();
 
         mBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBgRect = new RectF();
@@ -143,7 +140,6 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
 
             mCurrState = a.getInt(R.styleable.DownloadButtonProgress_state, STATE_IDLE);
             mCancelable = a.getBoolean(R.styleable.DownloadButtonProgress_cancelable, DEF_CANCELABLE);
-            mHideOnFinish = a.getBoolean(R.styleable.DownloadButtonProgress_hideOnFinish, false);
             mProgressIndeterminateSweepAngle = a.getInteger(R.styleable.DownloadButtonProgress_progressIndeterminateSweepAngle, DEF_PROGRESS_INDETERMINATE_WIDTH);
             mProgressDeterminateColor = a.getColor(R.styleable.DownloadButtonProgress_progressDeterminateColor, DEF_DETERMINATE_COLOR);
             mProgressIndeterminateColor = a.getColor(R.styleable.DownloadButtonProgress_progressIndeterminateColor, DEF_INDETERMINATE_COLOR);
@@ -173,7 +169,6 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
         } else {
             mCurrState = STATE_IDLE;
             mCancelable = DEF_CANCELABLE;
-            mHideOnFinish = false;
             mProgressIndeterminateSweepAngle = DEF_PROGRESS_INDETERMINATE_WIDTH;
             mProgressDeterminateColor = DEF_DETERMINATE_COLOR;
             mProgressIndeterminateColor = DEF_INDETERMINATE_COLOR;
@@ -202,8 +197,6 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
 
         if (mCurrState == STATE_INDETERMINATE)
             setIndeterminate();
-        if (mCurrState == STATE_FINISHED && mHideOnFinish)
-            setVisibility(GONE);
     }
 
     private void initBackgroundDrawableFromAttribs(Resources res, TypedArray attrs) {
@@ -221,10 +214,6 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
         mFinishBgColor = attrs.getColor(R.styleable.DownloadButtonProgress_finishBackgroundColor, DEF_BG_COLOR);
         mIndeterminateBgColor = attrs.getColor(R.styleable.DownloadButtonProgress_indeterminateBackgroundColor, DEF_BG_COLOR);
         mDeterminateBgColor = attrs.getColor(R.styleable.DownloadButtonProgress_determinateBackgroundColor, DEF_BG_COLOR);
-    }
-
-    public boolean isHideOnFinish() {
-        return mHideOnFinish;
     }
 
     public int getCurrState() {
@@ -335,14 +324,16 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
 
     public void setIdle() {
         mCurrState = STATE_IDLE;
-        setVisibility(VISIBLE);
+        callStateChangedListener(mCurrState);
+
         invalidate();
     }
 
     public void setIndeterminate() {
         mCurrIndeterminateBarPos = BASE_START_ANGLE;
         mCurrState = STATE_INDETERMINATE;
-        setVisibility(VISIBLE);
+        callStateChangedListener(mCurrState);
+
         invalidate();
 
         mIndeterminateAnimator.start();
@@ -353,26 +344,17 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
 
         mCurrProgress = 0;
         mCurrState = STATE_DETERMINATE;
-        setVisibility(VISIBLE);
+        callStateChangedListener(mCurrState);
+
         invalidate();
     }
 
     public void setFinish() {
         mCurrProgress = 0;
         mCurrState = STATE_FINISHED;
-        if (mHideOnFinish)
-            setVisibility(GONE);
-        invalidate();
-    }
+        callStateChangedListener(mCurrState);
 
-    public void setHideOnFinish(boolean hide) {
-        mHideOnFinish = hide;
-        if (mCurrState == STATE_FINISHED) {
-            if (mHideOnFinish)
-                setVisibility(GONE);
-            else
-                setVisibility(VISIBLE);
-        }
+        invalidate();
     }
 
     public void setIdleIcon(Drawable idleIcon) {
@@ -499,6 +481,20 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
         mClickListeners.remove(listener);
     }
 
+    public void addOnStateChangedListeners(OnStateChangedListener listener) {
+        if (!mOnStateChangedListeners.contains(listener))
+            mOnStateChangedListeners.add(listener);
+    }
+
+    public void removeOnStateChangedListener(OnStateChangedListener listener) {
+        mOnStateChangedListeners.remove(listener);
+    }
+
+    private void callStateChangedListener(int newState) {
+        for (OnStateChangedListener listener : mOnStateChangedListeners)
+            listener.onStateChanged(newState);
+    }
+
     @Override
     public void onClick(View v) {
         if (!mCancelable && (mCurrState == STATE_INDETERMINATE || mCurrState == STATE_DETERMINATE))
@@ -603,7 +599,6 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
         final Bundle bundle = new Bundle();
         bundle.putParcelable(INSTANCE_STATE, super.onSaveInstanceState());
         bundle.putInt(INSTANCE_MAX_PROGRESS, getMaxProgress());
-        bundle.putBoolean(INSTANCE_HIDE_ON_FINISH, isHideOnFinish());
         bundle.putInt(INSTANCE_CURRENT_PROGRESS, getCurrentProgress());
         bundle.putInt(INSTANCE_CURRENT_STATE, getCurrState());
         bundle.putBoolean(INSTANCE_CANCELABLE, isCancelable());
@@ -627,7 +622,6 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
     protected void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
-            mHideOnFinish = bundle.getBoolean(INSTANCE_HIDE_ON_FINISH);
             mMaxProgress = bundle.getInt(INSTANCE_MAX_PROGRESS);
             mCurrProgress = bundle.getInt(INSTANCE_CURRENT_PROGRESS);
             mCurrState = bundle.getInt(INSTANCE_CURRENT_STATE);
@@ -691,5 +685,9 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
         void onIdleButtonClick(View view);
         void onCancelButtonClick(View view);
         void onFinishButtonClick(View view);
+    }
+
+    public interface OnStateChangedListener {
+        void onStateChanged(int newState);
     }
 }

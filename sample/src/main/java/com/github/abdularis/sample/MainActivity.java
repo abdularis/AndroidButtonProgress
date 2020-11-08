@@ -3,6 +3,7 @@ package com.github.abdularis.sample;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,6 +18,17 @@ public class MainActivity extends AppCompatActivity {
 
         setListenerFor(R.id.button_progress_1, R.id.subtitle_1);
         setListenerFor(R.id.button_progress_2, R.id.subtitle_2);
+
+        final DownloadButtonProgress btn = findViewById(R.id.button_progress_1);
+        btn.addOnStateChangedListeners(new DownloadButtonProgress.OnStateChangedListener() {
+            @Override
+            public void onStateChanged(int newState) {
+                Log.d("TestMe", "state = " + newState);
+                if (newState == DownloadButtonProgress.STATE_FINISHED) {
+                    btn.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     private void setListenerFor(int btnId, int subtitleId) {

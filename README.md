@@ -103,7 +103,6 @@ attrs for DownloadButtonProgress
 		<enum name="FINISHED" value="4"/>			
 	</attr>
 	<attr name="cancelable" format="boolean"/>
-	<attr name="hideOnFinish" format="boolean"/>
 	<attr name="progressIndeterminateSweepAngle" format="integer"/>
 
 	<attr name="idleBackgroundColor" format="color"/>

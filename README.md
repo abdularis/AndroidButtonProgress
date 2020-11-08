@@ -137,4 +137,4 @@ attrs for DownloadButtonProgress
 ~~~
 
 ## License
-Apache License 2.0
+No

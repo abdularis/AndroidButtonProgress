@@ -67,11 +67,12 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
     private static final int DEF_PROGRESS_MARGIN = 5;
     private static final int DEF_PROGRESS_INDETERMINATE_WIDTH = 90;
 
+
     private Drawable mIdleIcon;
     private Drawable mCancelIcon;
     private Drawable mFinishIcon;
 
-    private boolean mCancelable;
+    private boolean mCancelable = DEF_CANCELABLE;
 
     private int mIdleIconWidth;
     private int mIdleIconHeight;
@@ -80,17 +81,14 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
     private int mFinishIconWidth;
     private int mFinishIconHeight;
 
-    private int mCurrState;
-    private int mMaxProgress;
-    private int mCurrProgress;
+    private int mCurrState = STATE_IDLE;
+    private int mMaxProgress = 100;
+    private int mCurrProgress = 0;
 
-    private Paint mBgPaint;
-    private RectF mBgRect;
-
-    private int mIdleBgColor;
-    private int mFinishBgColor;
-    private int mIndeterminateBgColor;
-    private int mDeterminateBgColor;
+    private int mIdleBgColor = DEF_BG_COLOR;
+    private int mFinishBgColor = DEF_BG_COLOR;
+    private int mIndeterminateBgColor = DEF_BG_COLOR;
+    private int mDeterminateBgColor = DEF_BG_COLOR;
 
     private Drawable mIdleBgDrawable;
     private Drawable mFinishBgDrawable;
@@ -99,16 +97,20 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
 
     private ValueAnimator mIndeterminateAnimator;
     private int mCurrIndeterminateBarPos;
-    private int mProgressIndeterminateSweepAngle;
+    private int mProgressIndeterminateSweepAngle = DEF_PROGRESS_INDETERMINATE_WIDTH;
 
-    private int mProgressDeterminateColor;
-    private int mProgressIndeterminateColor;
-    private int mProgressMargin;
-    private Paint mProgressPaint;
-    private RectF mProgressRect;
+    private int mProgressDeterminateColor = DEF_DETERMINATE_COLOR;
+    private int mProgressIndeterminateColor = DEF_INDETERMINATE_COLOR;
+    private int mProgressMargin = DEF_PROGRESS_MARGIN;
 
-    private List<OnClickListener> mClickListeners = new ArrayList<>();
-    private List<OnStateChangedListener> mOnStateChangedListeners = new ArrayList<>();
+    private final Paint mBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final RectF mBgRect = new RectF();
+
+    private final Paint mProgressPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final RectF mProgressRect = new RectF();
+
+    private final List<OnClickListener> mClickListeners = new ArrayList<>();
+    private final List<OnStateChangedListener> mOnStateChangedListeners = new ArrayList<>();
 
     public DownloadButtonProgress(Context context) {
         this(context, null);
@@ -120,17 +122,11 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
 
         initIndeterminateAnimator();
 
-        mBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBgRect = new RectF();
-
-        mProgressPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mProgressPaint.setStyle(Paint.Style.STROKE);
         mProgressPaint.setDither(true);
         mProgressPaint.setStrokeJoin(Paint.Join.ROUND);
         mProgressPaint.setStrokeCap(Paint.Cap.ROUND);
         mProgressPaint.setPathEffect(new CornerPathEffect(50f));
-
-        mProgressRect = new RectF();
 
         Resources res = context.getResources();
         if (attrs != null) {
@@ -167,20 +163,7 @@ public class DownloadButtonProgress extends View implements View.OnClickListener
 
             a.recycle();
         } else {
-            mCurrState = STATE_IDLE;
-            mCancelable = DEF_CANCELABLE;
-            mProgressIndeterminateSweepAngle = DEF_PROGRESS_INDETERMINATE_WIDTH;
-            mProgressDeterminateColor = DEF_DETERMINATE_COLOR;
-            mProgressIndeterminateColor = DEF_INDETERMINATE_COLOR;
             mProgressPaint.setStrokeWidth(DEF_PROGRESS_WIDTH);
-            mProgressMargin = DEF_PROGRESS_MARGIN;
-            mCurrProgress = 0;
-            mMaxProgress = 100;
-
-            mIdleBgColor = DEF_BG_COLOR;
-            mFinishBgColor = DEF_BG_COLOR;
-            mIndeterminateBgColor = DEF_BG_COLOR;
-            mDeterminateBgColor = DEF_BG_COLOR;
 
             mIdleIcon = res.getDrawable(R.drawable.ic_default_download);
             mIdleIconWidth = mIdleIcon.getMinimumWidth();
